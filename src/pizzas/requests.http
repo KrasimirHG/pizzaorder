@@ -1,0 +1,13 @@
+### Add a pizza
+Post http://localhost:3000/pizzas/add
+Content-Type: application/json
+
+{
+    "name": "pepperoni",
+    "description": "Classic pizza with tomato, pepperoni, sause and olive oil",
+    "size": "small",
+    "price": 10
+}
+
+### Fetch all pizzas
+GET http://localhost:3000/pizzas

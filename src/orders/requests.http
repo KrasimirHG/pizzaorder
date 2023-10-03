@@ -1,0 +1,14 @@
+### Make a order
+POST http://localhost:3000/orders
+content-type: application/json
+
+{"orders": [
+    {
+        "pizzaId": 2,
+        "quantity": 1
+    },
+    {
+        "pizzaId": 1,
+        "quantity": 1
+    }
+]}

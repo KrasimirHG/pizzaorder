@@ -1,0 +1,36 @@
+### Create a new user
+POST http://localhost:3000/auth/signup
+content-type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "123",
+  "firstName": "Test",
+  "lastName": "Testov",
+  "phoneNumber": "+359888111111",
+  "city": "Varna",
+  "address": "adasdsaad"
+}
+
+### Sign in using email and password
+POST http://localhost:3000/auth/signin
+content-type: application/json
+
+{
+  "email": "krasimirhg@gmail.com",
+  "password": "123"
+}
+
+### Update user profile - posible fields: email, phoneNumber, city, address
+PATCH http://localhost:3000/auth/profile/update
+content-type: application/json
+
+{
+  "address": "Rila 5"
+}
+
+### Sign out
+POST http://localhost:3000/auth/signout
+
+### Get the current user profile
+GET http://localhost:3000/auth/profile/get
