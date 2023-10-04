@@ -1,5 +1,5 @@
 ### Make a order
-POST http://localhost:3000/orders
+POST http://localhost:3000/orders/create
 content-type: application/json
 
 {"orders": [
@@ -12,3 +12,12 @@ content-type: application/json
         "quantity": 1
     }
 ]}
+
+### Change order status
+PATCH http://localhost:3000/orders/edit
+content-type: application/json
+
+{
+    "id": 8,
+    "status": "sfsdf"
+}

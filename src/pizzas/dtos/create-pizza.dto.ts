@@ -1,9 +1,9 @@
 import {IsString, IsNumber, IsEnum} from 'class-validator';
 
 enum pizzaSize {
-    small,
-    medium,
-    large
+    small = 'small',
+    medium = 'medium',
+    large = 'large'
 }
 
 export class CreatePizzaDto {
@@ -13,6 +13,7 @@ export class CreatePizzaDto {
     @IsString()
     description: string;
 
+    @IsString()
     @IsEnum(pizzaSize)
     size: string;
 
