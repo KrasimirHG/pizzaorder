@@ -24,7 +24,7 @@ const cookieSession = require('cookie-session');
         return {
           type: 'sqlite',
           database: config.get<string>('DB_NAME'),
-          synchronize: true, // TODO remove it
+          synchronize: false,
           entities: [User, Order, Pizza]
         }
     }}),
@@ -44,11 +44,12 @@ const cookieSession = require('cookie-session');
   ],
 })
 export class AppModule {
+  constructor(private configService: ConfigService) {}
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(
         cookieSession({
-          keys: ['asdfasfd'],
+          keys: [this.configService.get('COOKIE_KEY')],
           maxAge: 3 * 60 * 60 * 1000 // 3 hours
         }),
       )
