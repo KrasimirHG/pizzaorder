@@ -2,16 +2,13 @@
 POST http://localhost:3000/orders/create
 content-type: application/json
 
-{"orders": [
+{
+    "orders": [
     {
         "pizzaId": 2,
-        "quantity": 4
-    },
-    {
-        "pizzaId": 1,
-        "quantity": 1
-    }
-]}
+        "quantity": 5
+    }]
+}
 
 ### Change order status
 PATCH http://localhost:3000/orders/edit
