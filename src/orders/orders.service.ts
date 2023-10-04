@@ -15,7 +15,6 @@ export class OrdersService {
     const { orders, user } = params;
     const createdOn = new Date().toISOString();
     const pizzas = [];
-    const pizzaQty = {};
     let orderPrice = 0;
 
     for (const order of orders) {
