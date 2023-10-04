@@ -4,8 +4,8 @@ content-type: application/json
 
 {"orders": [
     {
-        "pizzaId": 5,
-        "quantity": 1
+        "pizzaId": 2,
+        "quantity": 4
     },
     {
         "pizzaId": 1,

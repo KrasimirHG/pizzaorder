@@ -3,13 +3,14 @@ POST http://localhost:3000/auth/signup
 content-type: application/json
 
 {
-  "email": "test@test.com",
+  "email": "krasimirhg@gmail.com",
   "password": "123",
-  "firstName": "Test",
-  "lastName": "Testov",
+  "firstName": "Krasi",
+  "lastName": "Genchev",
   "phoneNumber": "+359888111111",
   "city": "Varna",
-  "address": "adasdsaad"
+  "address": "adasdsaad",
+  "role": "admin"
 }
 
 ### Sign in using email and password
