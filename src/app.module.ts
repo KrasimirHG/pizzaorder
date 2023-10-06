@@ -24,7 +24,7 @@ const cookieSession = require('cookie-session');
         return {
           type: 'sqlite',
           database: config.get<string>('DB_NAME'),
-          synchronize: false,
+          synchronize: true,
           entities: [User, Order, Pizza]
         }
     }}),
