@@ -3,12 +3,16 @@ import { UsersService } from './users.service';
 import { User } from './user.entity';
 import { randomBytes, scrypt } from 'crypto';
 import { promisify } from 'util';
+import { JwtService } from '@nestjs/jwt';
 
 const promisifiedScript = promisify(scrypt);
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService
+    ) {}
 
   async signup(user: Partial<User>) {
 
@@ -28,7 +32,11 @@ export class AuthService {
 
     const newUser = await this.usersService.create(user);
 
-    return newUser;
+    const payload = { sub: newUser.id, fullName: `${newUser.firstName} ${newUser.lastName}`, role: newUser.role};
+
+    return {
+      access_token: await this.jwtService.signAsync(payload)
+    };
   }
 
   async signin(email: string, password: string) {
@@ -47,6 +55,10 @@ export class AuthService {
       throw new BadRequestException('bad password');
     }
 
-    return user;
+    const payload = { sub: user.id, fullName: `${user.firstName} ${user.lastName}`, role: user.role};
+
+    return {
+      access_token: await this.jwtService.signAsync(payload)
+    };
   }
 }

@@ -1,6 +1,7 @@
 ### Make a order
 POST http://localhost:3000/orders/create
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImZ1bGxOYW1lIjoiS3Jhc2kgR2VuY2hldiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY5NzEzNzU5OCwiZXhwIjoxNjk3MTQzNTk4fQ.F2jd7W8wK1-3M_U-JROlu9A_Pbb7zSYOgmVcRGrTu9k
 
 {
     "orders": [
@@ -13,8 +14,9 @@ content-type: application/json
 ### Change order status
 PATCH http://localhost:3000/orders/edit
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImZ1bGxOYW1lIjoiS3Jhc2kgR2VuY2hldiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY5NzE0NDcxNiwiZXhwIjoxNjk3MTUwNzE2fQ.SwtuyJtCFzOFtDlIU2-nkG0w_VgR4_88qmjCWb2myPo
 
 {
-    "id": 8,
-    "status": "sfsdf"
+    "id": 16,
+    "status": "compleated"
 }
