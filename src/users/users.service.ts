@@ -1,37 +1,43 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
+import { Model, Types } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { User } from './schemas/user.schema';
+import { IUser } from '../interfaces';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(User) private repo: Repository<User>) {}
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  create(user: Partial<User>) {
+  async create(user: Partial<User>) {
     const createdOn = new Date().toISOString();
 
-    const newUser = this.repo.create({...user, createdOn})
+    const newUser = new this.userModel({ ...user, createdOn });
 
-    return this.repo.save(newUser);
+    newUser.save();
+
+    return newUser;
   }
 
-  findById(id: number) {
+  findById(id: Types.ObjectId) {
     if (!id) {
       return null;
     }
-    return this.repo.findOneBy({ id });
+    return this.userModel.findById(id).lean().exec();
   }
 
-  find(email: string) {
-    return this.repo.find({ where: { email } });
+  async find(email: string): Promise<IUser> {
+    const [user] =  await this.userModel.find({ email });
+    // @ts-ignore
+    return user?._doc;
   }
 
-  async update(id: number, attrs: Partial<User>) {
+  async update(id: Types.ObjectId, attrs: Partial<User>) {
     const user = await this.findById(id);
     if (!user) {
       throw new NotFoundException('user not found');
     }
     Object.assign(user, attrs);
-    return this.repo.save(user);
+    // @ts-ignore
+    return user.save();
   }
 }

@@ -3,7 +3,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UsersService } from './users.service';
-import { User } from './user.entity';
+import { User } from './schemas/user.schema';
 
 const testUser = {
   "email": "aaa@gmail.com",

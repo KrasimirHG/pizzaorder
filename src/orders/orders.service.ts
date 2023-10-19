@@ -1,15 +1,15 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Order } from './order.entity';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { Order } from './schemas/order.schema';
 import { PizzasService } from '../pizzas/pizzas.service';
-import { ChangeOrderStatusDto } from './dtos/change-order-status.dto';
+import {IPizza} from '../interfaces';
 
 @Injectable()
 export class OrdersService {
   constructor(
-    @InjectRepository(Order) private repoOrder: Repository<Order>,
-    private pizzasService: PizzasService
+    @InjectModel(Order.name) private orderModel: Model<Order>,
+    private pizzasService: PizzasService,
   ) {}
 
   async makeOrder(params: any) {
@@ -21,27 +21,31 @@ export class OrdersService {
     for (const order of orders) {
       const { pizzaId, quantity } = order;
 
-      const pizza = await this.pizzasService.findById(pizzaId);
+      const {_doc}: IPizza = await this.pizzasService.findById(pizzaId);
 
-      if (!pizza) {
-        throw new BadRequestException('Sorry we don\'t have such a pizza')
+      if (!_doc) {
+        throw new BadRequestException("Sorry we don't have such a pizza");
       }
 
-      pizzas.push({...pizza, quantity});
+      pizzas.push({ ..._doc, quantity });
 
-      const price = pizza.price;
+      const price = _doc.price;
       orderPrice += price * (quantity || 1);
     }
     const orderObj = {
       createdOn,
       orderPrice,
       user,
-      pizzas
-    }
-    const orderEntity = await this.repoOrder.create(orderObj);
-    await this.repoOrder.save(orderEntity);
+      pizzas,
+    };
 
-    const message = pizzas.map(pizza => `${pizza.name} x ${pizza.quantity}`).join(', ');
+    const newOrder = new this.orderModel(orderObj);
+
+    newOrder.save();
+
+    const message = pizzas
+      .map((pizza) => `${pizza.name} x ${pizza.quantity}`)
+      .join(', ');
 
     return `Hello ${user.firstName}, your order is ${message}. It will cost you only ${orderPrice}EUR. Enjoy :)`;
   }
@@ -50,17 +54,17 @@ export class OrdersService {
     if (!id) {
       return null;
     }
-    return this.repoOrder.findOneBy({ id });
+    return this.orderModel.findById(id);
   }
 
   async changeOrderStatus(id: number, status: string) {
     let order = await this.findById(id);
 
-    if(!order) {
-      throw new BadRequestException('Sorry, can\'t find such an order');
+    if (!order) {
+      throw new BadRequestException("Sorry, can't find such an order");
     }
-
-    order = {...order, status};
-    return this.repoOrder.save(order)
+    //@ts-ignore
+    order = { ...order, status };
+    return order.save();
   }
 }

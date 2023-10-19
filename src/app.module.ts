@@ -1,15 +1,12 @@
 import { Module, ValidationPipe, MiddlewareConsumer } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_PIPE } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { OrdersModule } from './orders/orders.module';
 import { PizzasModule } from './pizzas/pizzas.module';
-import { User } from './users/user.entity';
-import { Order } from './orders/order.entity';
-import { Pizza } from './pizzas/pizza.entity';
 const cookieSession = require('cookie-session');
 
 @Module({
@@ -18,14 +15,12 @@ const cookieSession = require('cookie-session');
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
-    TypeOrmModule.forRootAsync({
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => {
+      useFactory: async (config: ConfigService) => {
         return {
-          type: 'sqlite',
-          database: config.get<string>('DB_NAME'),
-          synchronize: true,
-          entities: [User, Order, Pizza]
+          uri: config.get<string>('MONGO_URI')
         }
     }}),
     UsersModule,

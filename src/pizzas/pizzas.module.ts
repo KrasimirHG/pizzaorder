@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
 import { PizzasController } from './pizzas.controller';
 import { PizzasService } from './pizzas.service';
-import { Pizza } from './pizza.entity';
+import {Pizza, PizzaSchema} from './schemas/pizza.schema'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Pizza])],
+  imports: [MongooseModule.forFeature([{ name: Pizza.name, schema: PizzaSchema }])],
   controllers: [PizzasController],
   providers: [PizzasService],
   exports: [PizzasService]

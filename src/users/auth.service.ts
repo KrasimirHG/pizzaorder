@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { User } from './user.entity';
+import { IUser } from '../interfaces';
 import { randomBytes, scrypt } from 'crypto';
 import { promisify } from 'util';
 import { JwtService } from '@nestjs/jwt';
@@ -14,10 +14,10 @@ export class AuthService {
     private jwtService: JwtService
     ) {}
 
-  async signup(user: Partial<User>) {
+  async signup(user: IUser) {
 
     const users = await this.usersService.find(user.email);
-
+    //@ts-ignore
     if (users.length) {
       throw new BadRequestException('The email is already in use');
     }
@@ -30,24 +30,28 @@ export class AuthService {
 
     user.password = hashedSaltedPass;
 
-    const newUser = await this.usersService.create(user);
-
-    const payload = { sub: newUser.id, fullName: `${newUser.firstName} ${newUser.lastName}`, role: newUser.role};
+    const {_doc}: IUser = await this.usersService.create(user);
+    const {_id, firstName, lastName, role} = _doc;
+    
+    const payload = { sub: _id.toString(), fullName: `${firstName} ${lastName}`, role};
 
     return {
-      access_token: await this.jwtService.signAsync(payload)
+      access_token: await this.jwtService.signAsync(payload),
+      newUser: {id: _id.toString(), firstName, lastName, role}
     };
   }
 
   async signin(email: string, password: string) {
 
-    const [user] = await this.usersService.find(email);
+    const user = await this.usersService.find(email);
     
     if (!user) {
       throw new NotFoundException('user not found');
     }
 
-    const [salt, storedHash] = user.password.split('.');
+    const {_id, firstName, lastName, role, password: hsPassword} = user;
+
+    const [salt, storedHash] = hsPassword.split('.');
 
     const hash = (await promisifiedScript(password, salt, 32)) as Buffer;
 
@@ -55,10 +59,11 @@ export class AuthService {
       throw new BadRequestException('bad password');
     }
 
-    const payload = { sub: user.id, fullName: `${user.firstName} ${user.lastName}`, role: user.role};
+    const payload = { sub: _id.toString(), fullName: `${firstName} ${lastName}`, role};
 
     return {
-      access_token: await this.jwtService.signAsync(payload)
+      access_token: await this.jwtService.signAsync(payload),
+      user: {id: _id.toString(), firstName, lastName, role}
     };
   }
 }

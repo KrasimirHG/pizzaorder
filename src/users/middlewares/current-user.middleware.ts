@@ -2,7 +2,7 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request, Response, NextFunction } from 'express';
 import { UsersService } from '../users.service';
-import {User} from '../user.entity';
+import {User} from '../schemas/user.schema';
 import { JwtService } from '@nestjs/jwt';
 
 declare global {
@@ -27,7 +27,7 @@ export class CurrentUserMiddleware implements NestMiddleware {
   }  
 
   async use(req: Request, res: Response, next: NextFunction) {
-    const token = this.extractTokenFromHeader(req);
+    const token = req.session?.access_token
     if (token) {
       let payload;
       try {

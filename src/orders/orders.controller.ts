@@ -5,7 +5,7 @@ import { AdminGuard } from '../guards/admin.guard';
 import { AuthGuard } from '../guards/auth.guard';
 import { OrdersService } from './orders.service';
 import { CurrentUser } from '../users/decorators/current-user.decorator';
-import { User } from '../users/user.entity';
+import { IUser } from '../interfaces';
 
 @Controller('orders')
 export class OrdersController {
@@ -13,7 +13,7 @@ export class OrdersController {
 
     @UseGuards(AuthGuard)
     @Post('/create')
-    makeOrder(@CurrentUser() user: User, @Body() body: CreateOrderDto) {
+    makeOrder(@CurrentUser() user: IUser, @Body() body: CreateOrderDto) {
         return this.ordersService.makeOrder({...body, user})
     }
 

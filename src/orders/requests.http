@@ -1,12 +1,11 @@
 ### Make a order
 POST http://localhost:3000/orders/create
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImZ1bGxOYW1lIjoiS3Jhc2kgR2VuY2hldiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY5NzEzNzU5OCwiZXhwIjoxNjk3MTQzNTk4fQ.F2jd7W8wK1-3M_U-JROlu9A_Pbb7zSYOgmVcRGrTu9k
 
 {
     "orders": [
     {
-        "pizzaId": 2,
+        "pizzaId": "65303f3053be4b73671931ca",
         "quantity": 5
     }]
 }

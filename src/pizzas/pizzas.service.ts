@@ -1,26 +1,25 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Pizza } from './pizza.entity';
-
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { Pizza } from './schemas/pizza.schema';
 @Injectable()
 export class PizzasService {
-  constructor(@InjectRepository(Pizza) private repo: Repository<Pizza>) {}
+  constructor(@InjectModel(Pizza.name) private pizzaModel: Model<Pizza>) {}
 
   create(pizza: Partial<Pizza>) {
-    const newPizza = this.repo.create(pizza);
+    const newPizza = new this.pizzaModel(pizza);
 
-    return this.repo.save(newPizza);
+    return newPizza.save();
   }
 
   find() {
-    return this.repo.find();
+    return this.pizzaModel.find().exec();
   }
 
-  findById(id: number) {
+  findById(id: string) {
     if (!id) {
       return null;
     }
-    return this.repo.findOneBy({ id });
+    return this.pizzaModel.findById( id );
   }
 }

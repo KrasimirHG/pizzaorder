@@ -1,9 +1,9 @@
-import {IsArray, IsNumber, ValidateNested} from 'class-validator';
+import {IsArray, IsNumber, IsString, ValidateNested} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class OrderDto {
-    @IsNumber()
-    pizzaId: number;
+    @IsString()
+    pizzaId: string;
 
     @IsNumber()
     quantity: number;
